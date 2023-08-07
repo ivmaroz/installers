@@ -17,8 +17,9 @@ echo "Create data & configs directories"
 if [ ! -d /var/lib/alertmanager ]; then
   sudo mkdir -p /var/lib/alertmanager
   sudo chown alertmanager:alertmanager /var/lib/alertmanager
-  sudo mkdir -p /etc/alertmanager
 fi
+
+sudo mkdir -p /etc/alertmanager
 
 ########################################################################################################################
 
@@ -50,12 +51,6 @@ else
   exit 1
 fi
 
-if [ -f /usr/local/bin/alertmanager ]; then
-  ALERT_HASH=$(shasum -a256 /usr/local/bin/alertmanager | awk '{ print $1 }')
-else
-  ALERT_HASH=""
-fi
-
 ARCHITECTURE=""
 case $(uname -m) in
 i386) ARCHITECTURE="386" ;;
@@ -73,27 +68,32 @@ wget "https://github.com/prometheus/alertmanager/releases/download/v${VERSION}/a
   -O /tmp/alertmanager/alertmanager.tar.gz
 
 cd /tmp/alertmanager/
-tar -xf alertmanager.tar.gz
+tar -xvf alertmanager.tar.gz
 
 cd "alertmanager-${VERSION}.${OS}-${ARCHITECTURE}"
 
-sudo mv alertmanager amtool /usr/local/bin/
+if [ ! -f /usr/local/bin/alertmanager ] || [ "$(shasum -a256 alertmanager | awk '{ print $1 }')" != "$(shasum -a256 /usr/local/bin/alertmanager | awk '{ print $1 }')" ]; then
+  sudo mv -v alertmanager /usr/local/bin/
+  UPDATED=1
+else
+  UPDATED=0
+fi
+
+if [ ! -f /usr/local/bin/amtool ] || [ "$(shasum -a256 amtool | awk '{ print $1 }')" != "$(shasum -a256 /usr/local/bin/amtool | awk '{ print $1 }')" ]; then
+  sudo mv -v amtool /usr/local/bin/
+fi
+
 if [ ! -f /etc/alertmanager/alertmanager.yml ]; then
-  echo "Copy config"
-  sudo mv alertmanager.yml /etc/alertmanager/alertmanager.yml
+  sudo mv -v alertmanager.yml /etc/alertmanager/alertmanager.yml
 fi
 
 ########################################################################################################################
-
-NEW_HASH=$(shasum -a256 /usr/local/bin/alertmanager | awk '{ print $1 }')
-echo "$ALERT_HASH"
-echo "$NEW_HASH"
 
 if [ ! -f /etc/systemd/system/alertmanager.service ]; then
 
   sudo tee /etc/systemd/system/alertmanager.service <<EOF
 [Unit]
-Description=Prometheus
+Description=Alertmanager
 Documentation=https://prometheus.io/docs/introduction/overview/
 Wants=network-online.target
 After=network-online.target
@@ -120,9 +120,7 @@ EOF
 
 else
 
-  if [ "${NEW_HASH}" != "${ALERT_HASH}" ]; then
-    echo "Restart Alertmanager"
-
+  if [[ $UPDATED -eq 1 ]]; then
     sudo systemctl restart alertmanager.service
   fi
 fi
