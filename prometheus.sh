@@ -25,12 +25,10 @@ done
 
 ########################################################################################################################
 
-echo "Update required files"
-
-echo "Update required files"
-
 for COMMAND in jq wget curl vim; do
   if ! command -v "$COMMAND" &>/dev/null; then
+    echo "Update required files"
+
     sudo apt update
     sudo apt -y install jq wget curl vim
     break

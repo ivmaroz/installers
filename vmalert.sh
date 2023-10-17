@@ -70,11 +70,10 @@ wget "https://github.com/VictoriaMetrics/VictoriaMetrics/releases/download/v${VE
 cd /tmp/victoriametrics/
 tar -xf victoriametrics-vmutils.tar.gz
 
+UPDATED=0
 if [ ! -f /usr/local/bin/vmalert ] || [ "$(shasum -a256 vmalert-prod | awk '{ print $1 }')" != "$(shasum -a256 /usr/local/bin/vmalert | awk '{ print $1 }')" ]; then
   sudo mv -v vmalert-prod /usr/local/bin/vmalert
   UPDATED=1
-else
-  UPDATED=0
 fi
 
 ########################################################################################################################
