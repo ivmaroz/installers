@@ -7,8 +7,3 @@ scrape_configs:
     static_configs:
       - targets:
           - localhost:8429
-
-  - job_name: "victoriametrics"
-    static_configs:
-      - targets:
-          - localhost:8428
