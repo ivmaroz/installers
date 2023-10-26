@@ -2,6 +2,13 @@
 
 set -e
 
+SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
+
+########################################################################################################################
+
+source "${SCRIPT_DIR}/tools/vars.sh"
+"${SCRIPT_DIR}/tools/soft.sh"
+
 ########################################################################################################################
 
 echo "Create Prometheus system group"
@@ -25,112 +32,57 @@ done
 
 ########################################################################################################################
 
-for COMMAND in jq wget curl vim; do
-  if ! command -v "$COMMAND" &>/dev/null; then
-    echo "Update required files"
-
-    sudo apt update
-    sudo apt -y install jq wget curl vim
-    break
-  fi
-done
-
-########################################################################################################################
-
 VERSION=$(curl -s https://api.github.com/repos/prometheus/prometheus/releases/latest | jq -r '.tag_name' | sed 's/^v//')
 
-if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-  OS="linux"
-elif [[ "$OSTYPE" == "darwin"* ]]; then
-  OS="darwin"
-else
-  echo "Unknown OS"
-  exit 1
-fi
-
-ARCHITECTURE=""
-case $(uname -m) in
-i386) ARCHITECTURE="386" ;;
-i686) ARCHITECTURE="386" ;;
-x86_64) ARCHITECTURE="amd64" ;;
-arm) dpkg --print-architecture | grep -q "arm64" && ARCHITECTURE="arm64" || ARCHITECTURE="arm" ;;
-esac
-
 ########################################################################################################################
 
-echo "Download Prometheus files"
+APP_SOURCE_DIR="/tmp/prometheus-${VERSION}.${OS}-${ARCH}"
 
-if [ -d /tmp/prometheus ]; then
-  sudo rm -rf /tmp/prometheus
+if [ ! -d "${APP_SOURCE_DIR}" ]; then
+
+  echo "Download Prometheus files"
+
+  if [ -d /tmp/prometheus ]; then
+    sudo rm -rf /tmp/prometheus
+  fi
+  mkdir -p /tmp/prometheus
+
+  wget "https://github.com/prometheus/prometheus/releases/download/v${VERSION}/prometheus-${VERSION}.${OS}-${ARCH}.tar.gz" \
+    -O /tmp/prometheus/prometheus.tar.gz
+
+  cd /tmp/prometheus/
+  tar -xvf prometheus.tar.gz
+
+  mv -v "/tmp/prometheus/prometheus-${VERSION}.${OS}-${ARCH}" "${APP_SOURCE_DIR}"
+  rm -rf "/tmp/prometheus"
 fi
-mkdir -p /tmp/prometheus
 
-wget "https://github.com/prometheus/prometheus/releases/download/v${VERSION}/prometheus-${VERSION}.${OS}-${ARCHITECTURE}.tar.gz" \
-  -O /tmp/prometheus/prometheus.tar.gz
-
-cd /tmp/prometheus/
-tar -xvf prometheus.tar.gz
-
-cd "prometheus-${VERSION}.${OS}-${ARCHITECTURE}"
-
-if [ ! -f /usr/local/bin/prometheus ] || [ "$(shasum -a256 prometheus | awk '{ print $1 }')" != "$(shasum -a256 /usr/local/bin/prometheus | awk '{ print $1 }')" ]; then
-  sudo mv -v prometheus /usr/local/bin/
+UPDATED=0
+if [ ! -f /usr/local/bin/prometheus ] || [ "$(shasum -a256 "${APP_SOURCE_DIR}/prometheus" | awk '{ print $1 }')" != "$(shasum -a256 /usr/local/bin/prometheus | awk '{ print $1 }')" ]; then
+  sudo cp -v "${APP_SOURCE_DIR}/prometheus" "/usr/local/bin/prometheus"
   UPDATED=1
-else
-  UPDATED=0
 fi
 
-if [ ! -f /usr/local/bin/promtool ] || [ "$(shasum -a256 promtool | awk '{ print $1 }')" != "$(shasum -a256 /usr/local/bin/promtool | awk '{ print $1 }')" ]; then
-  sudo mv -v promtool /usr/local/bin/
+if [ ! -f /usr/local/bin/promtool ] || [ "$(shasum -a256 "${APP_SOURCE_DIR}/promtool" | awk '{ print $1 }')" != "$(shasum -a256 /usr/local/bin/promtool | awk '{ print $1 }')" ]; then
+  sudo cp -v "${APP_SOURCE_DIR}/promtool" "/usr/local/bin/promtool"
 fi
 
 if [ ! -f /etc/prometheus/prometheus.yml ]; then
-  sudo mv -v prometheus.yml /etc/prometheus/prometheus.yml
+  sudo cp -v "${APP_SOURCE_DIR}/prometheus.yml" "/etc/prometheus/prometheus.yml"
 fi
-sudo mv -nv consoles/ console_libraries/ /etc/prometheus/
+sudo cp -nrv "${APP_SOURCE_DIR}/consoles" "/etc/prometheus/"
+sudo cp -nrv "${APP_SOURCE_DIR}/console_libraries" "/etc/prometheus/"
 
 ########################################################################################################################
 
 if [ ! -f /etc/systemd/system/prometheus.service ]; then
 
-  sudo tee /etc/systemd/system/prometheus.service <<EOF
-[Unit]
-Description=Prometheus
-Documentation=https://prometheus.io/docs/introduction/overview/
-Wants=network-online.target
-After=network-online.target
-
-[Service]
-Type=simple
-User=prometheus
-Group=prometheus
-ExecReload=/bin/kill -HUP \$MAINPID
-ExecStart=/usr/local/bin/prometheus \
-            --config.file=/etc/prometheus/prometheus.yml \\
-            --storage.tsdb.path=/var/lib/prometheus \\
-            --web.console.templates=/etc/prometheus/consoles \\
-            --web.console.libraries=/etc/prometheus/console_libraries \\
-            --web.listen-address=0.0.0.0:9090 \\
-            --web.external-url= \\
-            --storage.tsdb.retention.size=10GB
-
-SyslogIdentifier=prometheus
-Restart=always
-
-[Install]
-WantedBy=multi-user.target
-EOF
+  sudo cp -v "${SCRIPT_DIR}/config/etc/systemd/system/prometheus.service" /etc/systemd/system/prometheus.service
 
   sudo systemctl daemon-reload
   sudo systemctl start prometheus.service
   sudo systemctl enable prometheus.service
 
-else
-
-  if [[ $UPDATED -eq 1 ]]; then
+elif [[ $UPDATED -eq 1 ]]; then
     sudo systemctl restart prometheus.service
-  fi
-
 fi
-
-rm -rf /tmp/prometheus
