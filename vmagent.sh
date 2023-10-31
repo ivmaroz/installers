@@ -48,13 +48,14 @@ APP_SOURCE_DIR="${TMP_DIR}"
 
 if [[ "$VERSION" != "$CURRENT_VERSION" ]]
 then
-  VERSION="${VERSION}" \
-  TMP_DIR="${TMP_DIR}" \
-    tools/vmutils.sh
-
 ########################################################################################################################
   SERVICE_STATUS=$(systemctl list-units -t service --full --all --plain --no-legend --no-pager --output json | jq -r '.[] | select(.unit == "'$SERVICE_NAME'") | .sub')
   [[ "${SERVICE_STATUS}" == "running" ]] && sudo systemctl stop "${SERVICE_NAME}"
+########################################################################################################################
+  VERSION="${VERSION}" \
+  TMP_DIR="${TMP_DIR}" \
+    tools/vmutils.sh
+########################################################################################################################
 
   echo -n "Copy files... "
 
