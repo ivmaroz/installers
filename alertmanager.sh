@@ -74,8 +74,13 @@ then
   [[ "${SERVICE_STATUS}" == "running" ]] && sudo systemctl stop "${SERVICE_NAME}"
 
   echo -n "Copy files... "
+
   sudo cp "${APP_SOURCE_DIR}/alertmanager" "/usr/local/bin/alertmanager"
   sudo cp "${APP_SOURCE_DIR}/amtool" "/usr/local/bin/amtool"
+
+  sudo chmod a+x "/usr/local/bin/alertmanager"
+  sudo chmod a+x "/usr/local/bin/amtool"
+
   echo -e "${GREEN}Done${NC}"
 
   if [ ! -f /etc/alertmanager/alertmanager.yml ]; then

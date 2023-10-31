@@ -70,10 +70,16 @@ then
   [[ "${SERVICE_STATUS}" == "running" ]] && sudo systemctl stop "${SERVICE_NAME}"
 
   echo -n "Copy files... "
+
   sudo cp "${APP_SOURCE_DIR}/prometheus" "/usr/local/bin/prometheus"
   sudo cp "${APP_SOURCE_DIR}/promtool" "/usr/local/bin/promtool"
+
+  sudo chmod a+x "/usr/local/bin/prometheus"
+  sudo chmod a+x "/usr/local/bin/promtool"
+
   sudo cp -nr "${APP_SOURCE_DIR}/consoles" "/etc/prometheus/"
   sudo cp -nr "${APP_SOURCE_DIR}/console_libraries" "/etc/prometheus/"
+
   echo -e "${GREEN}Done${NC}"
 
   if [ ! -f /etc/prometheus/prometheus.yml ]; then

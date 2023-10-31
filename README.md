@@ -44,6 +44,23 @@ systemctl status prometheus.service
 systemctl status alertmanager.service
 ```
 
+## node_exporter.sh
+
+Скрипт устанавливает или обновляет до последней версии [Node exporter](https://github.com/prometheus/node_exporter) со страницы https://github.com/prometheus/node_exporter/releases,
+создает базовую конфигурацию, настраивает и запускает службу
+
+Команда запуска
+
+```shell
+[VERSION=<version>] [OS=<os>] [ARCH=<architecture>] ./node_exporter.sh
+```
+
+Корректность установки можно проверить просмотром статуса сервиса `node_exporter.service` и открытием веб интерфейса по адресу http://127.0.0.1:9100
+
+```shell
+systemctl status node_exporter.service
+```
+
 ## victoriametrics.sh
 
 Скрипт устанавливает или обновляет до последней версии [VictoriaMetrics](https://victoriametrics.com/) со страницы https://github.com/VictoriaMetrics/VictoriaMetrics/releases,
