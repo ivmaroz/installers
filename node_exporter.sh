@@ -12,15 +12,6 @@ tools/soft.sh
 
 ########################################################################################################################
 
-#echo -n "Create Node exporter system user & group... "
-#if ! getent passwd alertmanager >/dev/null; then
-#  sudo groupadd --system alertmanager
-#  sudo useradd -s /sbin/nologin --system -g alertmanager alertmanager
-#fi
-#echo -e "${GREEN}Done${NC}"
-
-########################################################################################################################
-
 echo -n "Create data & configs directories... "
 sudo mkdir -p /var/lib/node_exporter/textfile_collector
 
@@ -86,3 +77,6 @@ SERVICE_NAME="$SERVICE_NAME" SERVICE_STATUS="$SERVICE_STATUS" "tools/systemd.sh"
 
 echo ""
 echo -e "${GREEN}Installation completed${NC}"
+
+echo ""
+echo "Open http://localhost:9100 in web browser"
