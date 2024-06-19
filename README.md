@@ -129,7 +129,7 @@ systemctl status vmalert.service
 
 ## php.sh
 
-Установка PHP версий 7.0-8.3 
+Установка PHP версий 7.0-8.3 из репозитория https://launchpad.net/~ondrej/+archive/ubuntu/php 
 
 ```shell
 ./php.sh 8.2
