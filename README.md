@@ -126,3 +126,12 @@ systemctl status vmalert.service
 Установка RabbitMQ на Ubuntu на примере [скрипта автоматической установки](https://www.rabbitmq.com/docs/install-debian#apt-quick-start-cloudsmith)
 
 Дополнительно включаются плагины rabbitmq_management и rabbitmq_prometheus
+
+## php.sh
+
+Установка PHP версий 7.0-8.3 
+
+```shell
+./php.sh 8.2
+```
+
