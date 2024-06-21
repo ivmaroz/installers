@@ -135,3 +135,6 @@ systemctl status vmalert.service
 
 Дополнительно включаются плагины rabbitmq_management и rabbitmq_prometheus
 
+## fake-webcam.sh
+
+Установка виртуальной камеры c добавлением виртуального фона [Linux-Fake-Background-Webcam](https://github.com/fangfufu/Linux-Fake-Background-Webcam) 
