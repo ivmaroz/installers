@@ -116,3 +116,9 @@ systemctl status vmagent.service
 ```shell
 systemctl status vmalert.service
 ```
+
+## rabbitmq.sh
+
+Установка RabbitMQ на Ubuntu на примере [скрипта автоматической установки](https://www.rabbitmq.com/docs/install-debian#apt-quick-start-cloudsmith)
+
+Дополнительно включаются плагины rabbitmq_management и rabbitmq_prometheus
