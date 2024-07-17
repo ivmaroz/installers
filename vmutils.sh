@@ -24,7 +24,7 @@ fi
 mkdir -p /tmp/victoriametrics
 
 wget "https://github.com/VictoriaMetrics/VictoriaMetrics/releases/download/v${VERSION}/vmutils-${OS}-${ARCHITECTURE}-v${VERSION}.tar.gz" \
-  -O "/tmp/victoriametrics/victoriametrics.tar.gz"
+  -O "/tmp/victoriametrics/vmutils.tar.gz"
 
 cd /tmp/victoriametrics/
-tar -xf "victoriametrics.tar.gz"
+tar -xf "vmutils.tar.gz"
