@@ -137,4 +137,8 @@ systemctl status vmalert.service
 
 ## fake-webcam.sh
 
-Установка виртуальной камеры c добавлением виртуального фона [Linux-Fake-Background-Webcam](https://github.com/fangfufu/Linux-Fake-Background-Webcam) 
+Установка виртуальной камеры c добавлением виртуального фона [Linux-Fake-Background-Webcam](https://github.com/fangfufu/Linux-Fake-Background-Webcam)
+
+## dbeaver.sh
+
+Установка [DBeaver Community](https://dbeaver.io/download/) 
