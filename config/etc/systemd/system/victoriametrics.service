@@ -10,8 +10,8 @@ User=victoriametrics
 Group=victoriametrics
 ExecReload=/bin/kill -HUP $MAINPID
 ExecStart=/usr/local/bin/victoriametrics \
-  -storageDataPath /var/lib/victoriametrics \
-  -retentionPeriod 1 \
+  -storageDataPath=/var/lib/victoriametrics \
+  -retentionPeriod=1 \
   -promscrape.config=/etc/victoriametrics/victoriametrics.yml \
   -promscrape.config.strictParse=true
 
