@@ -74,6 +74,10 @@ systemctl status node_exporter.service
 
 Корректность установки можно проверить просмотром статуса сервиса `victoriametrics.service` и открытием веб интерфейса по адресу http://127.0.0.1:8428
 
+```shell
+systemctl status victoriametrics.service
+```
+
 ## vmagent.sh
 
 Скрипт устанавливает или обновляет до последней версии [vmagent](https://docs.victoriametrics.com/vmagent.html) со страницы https://github.com/VictoriaMetrics/VictoriaMetrics/releases,
@@ -90,7 +94,11 @@ systemctl status node_exporter.service
 * `OS` - тип операционной системы (`linux`, `darwin` и т.д, соответствует ОС в ссылках на скачивание). При отсутствии определяется автоматически
 * `ARCH` - архитектура системы (`amd64`, `386`  и т.д, соответствует архитектуре в ссылках на скачивание). При отсутствии определяется автоматически
 
-Корректность установки можно проверить просмотром статуса сервиса `victoriametrics.service` и открытием веб интерфейса по адресу http://127.0.0.1:8429
+Корректность установки можно проверить просмотром статуса сервиса `vmagent.service` и открытием веб интерфейса по адресу http://127.0.0.1:8429
+
+```shell
+systemctl status vmagent.service
+```
 
 ## vmalert.sh
 
@@ -103,4 +111,8 @@ systemctl status node_exporter.service
 [VERSION=<version>] [OS=<os>] [ARCH=<architecture>] ./vmalert.sh
 ```
 
-Корректность установки можно проверить просмотром статуса сервиса `victoriametrics.service` и открытием веб интерфейса по адресу http://127.0.0.1:8880
+Корректность установки можно проверить просмотром статуса сервиса `vmalert.service` и открытием веб интерфейса по адресу http://127.0.0.1:8880
+
+```shell
+systemctl status vmalert.service
+```
