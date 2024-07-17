@@ -65,3 +65,6 @@ SERVICE_NAME="$SERVICE_NAME" SERVICE_STATUS="$SERVICE_STATUS" "tools/systemd.sh"
 
 echo ""
 echo -e "${GREEN}Installation completed${NC}"
+
+echo ""
+echo "Open http://localhost:8880 in web browser"
