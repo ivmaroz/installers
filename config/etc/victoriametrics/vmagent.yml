@@ -2,8 +2,8 @@ global:
   scrape_interval: 1m
   scrape_timeout: 10s
 
+scrape_config_files:
+  - vmagent.d/vmagent.yml
+#  - vmagent.d/node_exporter.yml
+
 scrape_configs:
-  - job_name: "vmagent"
-    static_configs:
-      - targets:
-          - localhost:8429

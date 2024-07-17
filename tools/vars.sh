@@ -22,5 +22,12 @@ if [[ "$ARCH" == "" ]]; then
   esac
 fi
 
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+NC='\033[0m' # No Color
+
 export OS
 export ARCH
+export GREEN
+export RED
+export NC

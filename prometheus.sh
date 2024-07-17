@@ -2,87 +2,93 @@
 
 set -e
 
-SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
+ROOT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
+cd "$ROOT_DIR"
 
 ########################################################################################################################
 
-source "${SCRIPT_DIR}/tools/vars.sh"
-"${SCRIPT_DIR}/tools/soft.sh"
+source tools/vars.sh
+tools/soft.sh
 
 ########################################################################################################################
 
-echo "Create Prometheus system group"
+echo -n "Create Prometheus system user & group... "
 if ! getent passwd prometheus >/dev/null; then
   sudo groupadd --system prometheus
   sudo useradd -s /sbin/nologin --system -g prometheus prometheus
 fi
+echo -e "${GREEN}Done${NC}"
 
 ########################################################################################################################
 
-echo "Create data & configs directories"
-
+echo -n "Create data & configs directories... "
 if [ ! -d /var/lib/prometheus ]; then
   sudo mkdir -p /var/lib/prometheus
   sudo chown prometheus:prometheus /var/lib/prometheus
 fi
-
 for i in rules rules.d files_sd; do
   sudo mkdir -p /etc/prometheus/${i}
 done
+echo -e "${GREEN}Done${NC}"
 
 ########################################################################################################################
 
-VERSION=$(curl -s https://api.github.com/repos/prometheus/prometheus/releases/latest | jq -r '.tag_name' | sed 's/^v//')
+
+if [[ "$VERSION" == "" ]]
+then
+  VERSION=$(curl -s https://api.github.com/repos/prometheus/prometheus/releases/latest | jq -r '.tag_name' | sed 's/^v//')
+fi
+
+if [ -f /usr/local/bin/prometheus ]
+then
+  CURRENT_VERSION=$(/usr/local/bin/prometheus --version | head -1 | grep -Po 'version \S+' | awk '{ print $2 }')
+fi
 
 ########################################################################################################################
 
-APP_SOURCE_DIR="/tmp/prometheus-${VERSION}.${OS}-${ARCH}"
+SERVICE_NAME="prometheus.service"
+TMP_DIR=/tmp/prometheus
+APP_SOURCE_DIR="${TMP_DIR}/prometheus-${VERSION}.${OS}-${ARCH}"
 
-if [ ! -d "${APP_SOURCE_DIR}" ]; then
+if [[ "$VERSION" != "$CURRENT_VERSION" ]]
+then
+  [[ -d "${TMP_DIR}" ]] && sudo rm -rf "${TMP_DIR}"
+  mkdir -p "${TMP_DIR}"
 
-  echo "Download Prometheus files"
-
-  if [ -d /tmp/prometheus ]; then
-    sudo rm -rf /tmp/prometheus
-  fi
-  mkdir -p /tmp/prometheus
-
+  echo "Download Prometheus files... "
   wget "https://github.com/prometheus/prometheus/releases/download/v${VERSION}/prometheus-${VERSION}.${OS}-${ARCH}.tar.gz" \
-    -O /tmp/prometheus/prometheus.tar.gz
+    -O "${TMP_DIR}/prometheus.tar.gz"
 
-  cd /tmp/prometheus/
+  echo "Unpack archive... "
+  cd "${TMP_DIR}"
   tar -xvf prometheus.tar.gz
-
-  mv -v "/tmp/prometheus/prometheus-${VERSION}.${OS}-${ARCH}" "${APP_SOURCE_DIR}"
-  rm -rf "/tmp/prometheus"
-fi
-
-UPDATED=0
-if [ ! -f /usr/local/bin/prometheus ] || [ "$(shasum -a256 "${APP_SOURCE_DIR}/prometheus" | awk '{ print $1 }')" != "$(shasum -a256 /usr/local/bin/prometheus | awk '{ print $1 }')" ]; then
-  sudo cp -v "${APP_SOURCE_DIR}/prometheus" "/usr/local/bin/prometheus"
-  UPDATED=1
-fi
-
-if [ ! -f /usr/local/bin/promtool ] || [ "$(shasum -a256 "${APP_SOURCE_DIR}/promtool" | awk '{ print $1 }')" != "$(shasum -a256 /usr/local/bin/promtool | awk '{ print $1 }')" ]; then
-  sudo cp -v "${APP_SOURCE_DIR}/promtool" "/usr/local/bin/promtool"
-fi
-
-if [ ! -f /etc/prometheus/prometheus.yml ]; then
-  sudo cp -v "${APP_SOURCE_DIR}/prometheus.yml" "/etc/prometheus/prometheus.yml"
-fi
-sudo cp -nrv "${APP_SOURCE_DIR}/consoles" "/etc/prometheus/"
-sudo cp -nrv "${APP_SOURCE_DIR}/console_libraries" "/etc/prometheus/"
+  cd "$ROOT_DIR"
 
 ########################################################################################################################
 
-if [ ! -f /etc/systemd/system/prometheus.service ]; then
+  SERVICE_STATUS=$(systemctl list-units -t service --full --all --plain --no-legend --no-pager --output json | jq -r '.[] | select(.unit == "'$SERVICE_NAME'") | .sub')
+  [[ "${SERVICE_STATUS}" == "running" ]] && sudo systemctl stop "${SERVICE_NAME}"
 
-  sudo cp -v "${SCRIPT_DIR}/config/etc/systemd/system/prometheus.service" /etc/systemd/system/prometheus.service
+  echo -n "Copy files... "
+  sudo cp "${APP_SOURCE_DIR}/prometheus" "/usr/local/bin/prometheus"
+  sudo cp "${APP_SOURCE_DIR}/promtool" "/usr/local/bin/promtool"
+  sudo cp -nr "${APP_SOURCE_DIR}/consoles" "/etc/prometheus/"
+  sudo cp -nr "${APP_SOURCE_DIR}/console_libraries" "/etc/prometheus/"
+  echo -e "${GREEN}Done${NC}"
 
-  sudo systemctl daemon-reload
-  sudo systemctl start prometheus.service
-  sudo systemctl enable prometheus.service
+  if [ ! -f /etc/prometheus/prometheus.yml ]; then
+    echo -n "Copy config... "
+    sudo cp "${APP_SOURCE_DIR}/prometheus.yml" "/etc/prometheus/prometheus.yml"
+    echo -e "${GREEN}Done${NC}"
+  fi
 
-elif [[ $UPDATED -eq 1 ]]; then
-    sudo systemctl restart prometheus.service
 fi
+
+########################################################################################################################
+
+SERVICE_NAME="$SERVICE_NAME" SERVICE_STATUS="$SERVICE_STATUS" tools/systemd.sh
+
+[[ -d "${TMP_DIR}" ]] && sudo rm -rf "${TMP_DIR}"
+
+echo ""
+echo -e "${GREEN}Installation completed${NC}"
