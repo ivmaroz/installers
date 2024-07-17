@@ -16,10 +16,10 @@ sudo mkdir -pv /etc/victoriametrics
 
 echo "Update required files"
 
-for COMMAND in jq wget curl vim; do
+for COMMAND in jq wget curl; do
   if ! command -v "$COMMAND" &>/dev/null; then
     sudo apt update
-    sudo apt -y install jq wget curl vim
+    sudo apt -y install jq wget curl
     break
   fi
 done

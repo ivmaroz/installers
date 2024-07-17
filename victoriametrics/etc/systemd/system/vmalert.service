@@ -1,0 +1,23 @@
+[Unit]
+Description=VMAlert
+Documentation=https://prometheus.io/docs/introduction/overview/
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=victoriametrics
+Group=victoriametrics
+ExecReload=/bin/kill -HUP $MAINPID
+ExecStart=/usr/local/bin/vmalert \
+  -rule=/etc/victoriametrics/rules/*.yml \
+  -datasource.url=http://localhost:8428 \
+  -remoteWrite.url=http://localhost:8428 \
+  -remoteRead.url=http://localhost:8428 \
+  -notifier.url=http://localhost:9093
+
+SyslogIdentifier=victoriametrics
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
