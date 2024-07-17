@@ -57,7 +57,9 @@ then
   [[ "${SERVICE_STATUS}" == "running" ]] && sudo systemctl stop "${SERVICE_NAME}"
 
   echo -n "Copy files... "
+
   sudo cp "${APP_SOURCE_DIR}/vmagent-prod" "/usr/local/bin/vmagent"
+  sudo chmod a+x "/usr/local/bin/vmagent"
 
   for CFG in "vmagent.yml" "vmagent.d/vmagent.yml" "vmagent.d/node_exporter.yml"
   do

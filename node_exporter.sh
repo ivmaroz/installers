@@ -8,18 +8,21 @@ cd "$ROOT_DIR"
 ########################################################################################################################
 
 source tools/vars.sh
-tools/vmuser.sh
 tools/soft.sh
 
 ########################################################################################################################
 
-echo -n "Create data & configs directories... "
-if [ ! -d /var/lib/victoriametrics ]; then
-  sudo mkdir -p /var/lib/victoriametrics
-  sudo chown victoriametrics:victoriametrics /var/lib/victoriametrics
-fi
+#echo -n "Create Node exporter system user & group... "
+#if ! getent passwd alertmanager >/dev/null; then
+#  sudo groupadd --system alertmanager
+#  sudo useradd -s /sbin/nologin --system -g alertmanager alertmanager
+#fi
+#echo -e "${GREEN}Done${NC}"
 
-sudo mkdir -p /etc/victoriametrics
+########################################################################################################################
+
+echo -n "Create data & configs directories... "
+sudo mkdir -p /var/lib/node_exporter/textfile_collector
 
 echo -e "${GREEN}Done${NC}"
 
@@ -28,36 +31,36 @@ echo -e "${GREEN}Done${NC}"
 if [[ "$VERSION" == "" ]]
 then
   echo -n "Get latest version... "
-  VERSION=$(curl -s https://api.github.com/repos/VictoriaMetrics/VictoriaMetrics/releases/latest | jq -r '.tag_name' | sed 's/^v//')
+  VERSION=$(curl -s https://raw.githubusercontent.com/prometheus/node_exporter/master/VERSION)
   echo -e "(${VERSION}) ${GREEN}Done${NC}"
 fi
 
-if [ -f /usr/local/bin/victoriametrics ]
+if [ -f /usr/local/bin/node_exporter ]
 then
   echo -n "Get current version... "
-  CURRENT_VERSION=$(/usr/local/bin/victoriametrics --version | grep -oP '\-v\d+\.\d+\.\d+' | sed 's/^-v//')
+  CURRENT_VERSION=$(/usr/local/bin/node_exporter --version | head -1 | grep -Po 'version \S+' | awk '{ print $2 }')
   echo -e "(${CURRENT_VERSION}) ${GREEN}Done${NC}"
 fi
 
 ########################################################################################################################
 
-SERVICE_NAME="victoriametrics.service"
-TMP_DIR=/tmp/victoriametrics
-APP_SOURCE_DIR="${TMP_DIR}"
+SERVICE_NAME="node_exporter.service"
+TMP_DIR=/tmp/node_exporter
+APP_SOURCE_DIR="${TMP_DIR}/node_exporter-${VERSION}.${OS}-${ARCH}"
 
 if [[ "$VERSION" != "$CURRENT_VERSION" ]]
 then
   [[ -d "${TMP_DIR}" ]] && sudo rm -rf "${TMP_DIR}"
   mkdir -p "${TMP_DIR}"
 
-  echo -n "Download Alertmanager files... "
-  wget "https://github.com/VictoriaMetrics/VictoriaMetrics/releases/download/v${VERSION}/victoria-metrics-${OS}-${ARCH}-v${VERSION}.tar.gz" \
-    -O "${TMP_DIR}/victoriametrics.tar.gz"
+  echo -n "Download Node exporter files... "
+  wget "https://github.com/prometheus/node_exporter/releases/download/v${VERSION}/node_exporter-${VERSION}.${OS}-${ARCH}.tar.gz" \
+    -O "${TMP_DIR}/node_exporter.tar.gz"
   echo -e "${GREEN}Done${NC}"
 
   echo -n "Unpack archive... "
   cd "${TMP_DIR}"
-  tar -xvf victoriametrics.tar.gz > /dev/null
+  tar -xvf node_exporter.tar.gz
   cd "$ROOT_DIR"
   echo -e "${GREEN}Done${NC}"
 
@@ -68,14 +71,14 @@ then
 
   echo -n "Copy files... "
 
-  sudo cp "${APP_SOURCE_DIR}/victoria-metrics-prod" "/usr/local/bin/victoriametrics"
-  sudo chmod a+x "/usr/local/bin/victoriametrics"
-
-  sudo cp -n config/etc/victoriametrics/victoriametrics.yml /etc/victoriametrics/victoriametrics.yml
+  sudo cp "${APP_SOURCE_DIR}/node_exporter" "/usr/local/bin/node_exporter"
+  sudo chmod a+x "/usr/local/bin/node_exporter"
 
   echo -e "${GREEN}Done${NC}"
 
 fi
+
+########################################################################################################################
 
 SERVICE_NAME="$SERVICE_NAME" SERVICE_STATUS="$SERVICE_STATUS" "tools/systemd.sh"
 
@@ -83,4 +86,3 @@ SERVICE_NAME="$SERVICE_NAME" SERVICE_STATUS="$SERVICE_STATUS" "tools/systemd.sh"
 
 echo ""
 echo -e "${GREEN}Installation completed${NC}"
-

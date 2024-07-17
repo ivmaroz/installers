@@ -50,7 +50,10 @@ then
   [[ "${SERVICE_STATUS}" == "running" ]] && sudo systemctl stop "${SERVICE_NAME}"
 
   echo -n "Copy files... "
+
   sudo cp "${APP_SOURCE_DIR}/vmalert-prod" "/usr/local/bin/vmalert"
+  sudo chmod a+x "/usr/local/bin/vmalert"
+
   echo -e "${GREEN}Done${NC}"
 
 fi
