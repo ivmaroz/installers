@@ -1,0 +1,22 @@
+[Unit]
+Description=VictoriaMetrics
+Documentation=https://prometheus.io/docs/introduction/overview/
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=victoriametrics
+Group=victoriametrics
+ExecReload=/bin/kill -HUP $MAINPID
+ExecStart=/usr/local/bin/victoriametrics \
+  -storageDataPath /storage/var/lib/victoriametrics \
+  -retentionPeriod 1 \
+  -promscrape.config=/etc/victoriametrics/victoriametrics.yml \
+  -promscrape.config.strictParse=true
+
+SyslogIdentifier=victoriametrics
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
