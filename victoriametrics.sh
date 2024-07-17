@@ -81,9 +81,7 @@ else
 fi
 
 if [ ! -f /etc/victoriametrics/victoriametrics.yml ]; then
-
   sudo cp "${SCRIPT_DIR}/victoriametrics/etc/victoriametrics/victoriametrics.yml" /etc/victoriametrics/victoriametrics.yml
-
 fi
 
 ########################################################################################################################

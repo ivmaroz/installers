@@ -1,0 +1,21 @@
+[Unit]
+Description=VMAgent
+Documentation=https://docs.victoriametrics.com/vmagent.html
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=victoriametrics
+Group=victoriametrics
+ExecReload=/bin/kill -HUP $MAINPID
+ExecStart=/usr/local/bin/vmagent \
+  -promscrape.config=/etc/victoriametrics/vmagent.yml \
+  -remoteWrite.url=http://localhost:8428/api/v1/write \
+  -remoteWrite.tmpDataPath=/var/lib/vmagent-remotewrite-data
+
+SyslogIdentifier=vmagent
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
