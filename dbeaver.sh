@@ -7,4 +7,4 @@ if ! find /etc/apt/ -name "*.list" -print0 | xargs -0 cat | grep "^[[:space:]]*d
   sudo apt-get update
 fi
 
-sudo apt-get install dbeaver-ce
+sudo apt-get install -y dbeaver-ce
