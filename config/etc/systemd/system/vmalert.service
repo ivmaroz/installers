@@ -16,7 +16,7 @@ ExecStart=/usr/local/bin/vmalert \
   -remoteRead.url=http://localhost:8428 \
   -notifier.url=http://localhost:9093
 
-SyslogIdentifier=victoriametrics
+SyslogIdentifier=vmalert
 Restart=always
 
 [Install]
