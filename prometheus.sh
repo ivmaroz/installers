@@ -53,12 +53,6 @@ else
   exit 1
 fi
 
-if [ -f /usr/local/bin/prometheus ]; then
-  PROMETHEUS_HASH=$(shasum -a256 /usr/local/bin/prometheus | awk '{ print $1 }')
-else
-  PROMETHEUS_HASH=""
-fi
-
 ARCHITECTURE=""
 case $(uname -m) in
 i386) ARCHITECTURE="386" ;;
@@ -81,16 +75,23 @@ tar -xvf prometheus.tar.gz
 
 cd "prometheus-${VERSION}.${OS}-${ARCHITECTURE}"
 
-sudo mv prometheus promtool /usr/local/bin/
+if [ ! -f /usr/local/bin/prometheus ] || [ "$(shasum -a256 prometheus | awk '{ print $1 }')" != "$(shasum -a256 /usr/local/bin/prometheus | awk '{ print $1 }')" ]; then
+  sudo mv -v prometheus /usr/local/bin/
+  UPDATED=1
+else
+  UPDATED=0
+fi
+
+if [ ! -f /usr/local/bin/promtool ] || [ "$(shasum -a256 promtool | awk '{ print $1 }')" != "$(shasum -a256 /usr/local/bin/promtool | awk '{ print $1 }')" ]; then
+  sudo mv -v promtool /usr/local/bin/
+fi
+
 if [ ! -f /etc/prometheus/prometheus.yml ]; then
   sudo mv -v prometheus.yml /etc/prometheus/prometheus.yml
 fi
-
 sudo mv -nv consoles/ console_libraries/ /etc/prometheus/
 
 ########################################################################################################################
-
-NEW_HASH=$(shasum -a256 /usr/local/bin/prometheus | awk '{ print $1 }')
 
 if [ ! -f /etc/systemd/system/prometheus.service ]; then
 
@@ -128,7 +129,7 @@ EOF
 
 else
 
-  if [ "${NEW_HASH}" != "${PROMETHEUS_HASH}" ]; then
+  if [[ $UPDATED -eq 1 ]]; then
     sudo systemctl restart prometheus.service
   fi
 
