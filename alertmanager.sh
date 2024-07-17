@@ -25,18 +25,13 @@ sudo mkdir -p /etc/alertmanager
 
 echo "Update required files"
 
-REQUIRED=0
-
-for COMMAND in wget curl vim; do
+for COMMAND in jq wget curl vim; do
   if ! command -v "$COMMAND" &>/dev/null; then
-    REQUIRED=1
+    sudo apt update
+    sudo apt -y install jq wget curl vim
+    break
   fi
 done
-
-if [[ $REQUIRED -ne 0 ]]; then
-  sudo apt update
-  sudo apt -y install wget curl vim
-fi
 
 ########################################################################################################################
 
@@ -63,7 +58,11 @@ esac
 
 echo "Download Alertmanager files"
 
+if [ -d /tmp/alertmanager ]; then
+  sudo rm -rf /tmp/alertmanager
+fi
 mkdir -p /tmp/alertmanager
+
 wget "https://github.com/prometheus/alertmanager/releases/download/v${VERSION}/alertmanager-${VERSION}.${OS}-${ARCHITECTURE}.tar.gz" \
   -O /tmp/alertmanager/alertmanager.tar.gz
 
@@ -103,8 +102,8 @@ Type=simple
 User=alertmanager
 Group=alertmanager
 ExecReload=/bin/kill -HUP \$MAINPID
-ExecStart=/usr/local/bin/alertmanager \
-  --config.file=/etc/alertmanager/alertmanager.yml \
+ExecStart=/usr/local/bin/alertmanager \\
+  --config.file=/etc/alertmanager/alertmanager.yml \\
   --storage.path=/var/lib/alertmanager
 
 SyslogIdentifier=alertmanager

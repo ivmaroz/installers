@@ -27,18 +27,15 @@ done
 
 echo "Update required files"
 
-REQUIRED=0
+echo "Update required files"
 
-for COMMAND in wget curl vim jq; do
+for COMMAND in jq wget curl vim; do
   if ! command -v "$COMMAND" &>/dev/null; then
-    REQUIRED=1
+    sudo apt update
+    sudo apt -y install jq wget curl vim
+    break
   fi
 done
-
-if [[ $REQUIRED -ne 0 ]]; then
-  sudo apt update
-  sudo apt -y install wget curl vim jq
-fi
 
 ########################################################################################################################
 
@@ -65,6 +62,9 @@ esac
 
 echo "Download Prometheus files"
 
+if [ -d /tmp/prometheus ]; then
+  sudo rm -rf /tmp/prometheus
+fi
 mkdir -p /tmp/prometheus
 
 wget "https://github.com/prometheus/prometheus/releases/download/v${VERSION}/prometheus-${VERSION}.${OS}-${ARCHITECTURE}.tar.gz" \
@@ -95,7 +95,7 @@ sudo mv -nv consoles/ console_libraries/ /etc/prometheus/
 
 if [ ! -f /etc/systemd/system/prometheus.service ]; then
 
-    sudo tee /etc/systemd/system/prometheus.service <<EOF
+  sudo tee /etc/systemd/system/prometheus.service <<EOF
 [Unit]
 Description=Prometheus
 Documentation=https://prometheus.io/docs/introduction/overview/
@@ -108,12 +108,12 @@ User=prometheus
 Group=prometheus
 ExecReload=/bin/kill -HUP \$MAINPID
 ExecStart=/usr/local/bin/prometheus \
-            --config.file=/etc/prometheus/prometheus.yml \
-            --storage.tsdb.path=/var/lib/prometheus \
-            --web.console.templates=/etc/prometheus/consoles \
-            --web.console.libraries=/etc/prometheus/console_libraries \
-            --web.listen-address=0.0.0.0:9090 \
-            --web.external-url= \
+            --config.file=/etc/prometheus/prometheus.yml \\
+            --storage.tsdb.path=/var/lib/prometheus \\
+            --web.console.templates=/etc/prometheus/consoles \\
+            --web.console.libraries=/etc/prometheus/console_libraries \\
+            --web.listen-address=0.0.0.0:9090 \\
+            --web.external-url= \\
             --storage.tsdb.retention.size=10GB
 
 SyslogIdentifier=prometheus
