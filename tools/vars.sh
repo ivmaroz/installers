@@ -24,10 +24,12 @@ fi
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
+YELLOW='\e[0;33m'
 NC='\033[0m' # No Color
 
 export OS
 export ARCH
 export GREEN
+export YELLOW
 export RED
 export NC

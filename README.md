@@ -54,6 +54,10 @@ sudo update-alternatives --set composer /usr/local/bin/composer2
 
 ---
 
+## docker.sh
+
+Установка [docker](https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository) и плагина compose (docker compose)
+
 ## fake-webcam.sh
 
 Установка виртуальной камеры c добавлением виртуального фона [Linux-Fake-Background-Webcam](https://github.com/fangfufu/Linux-Fake-Background-Webcam)
