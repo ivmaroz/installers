@@ -45,6 +45,7 @@ sudo apt install -y \
   "php${VERSION}-imagick" \
   "php${VERSION}-intl" \
   "php${VERSION}-mbstring" \
+  "php${VERSION}-ldap" \
   "php${VERSION}-mcrypt" \
   "php${VERSION}-memcache" \
   "php${VERSION}-mysql" \
