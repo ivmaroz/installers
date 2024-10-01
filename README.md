@@ -12,7 +12,7 @@
 
 ---
 
-## alertmanager.sh
+## [alertmanager.sh](alertmanager.sh)
 
 Скрипт устанавливает или обновляет до последней версии [Alertmanager](https://prometheus.io/docs/alerting/latest/alertmanager/) со страницы https://github.com/prometheus/alertmanager/releases,
 создает базовую конфигурацию, настраивает и запускает службу
@@ -31,13 +31,13 @@ systemctl status alertmanager.service
 
 ---
 
-## blackbox_exporter.sh
+## [blackbox_exporter.sh](blackbox_exporter.sh)
 
 Установка [blackbox_exporter](https://github.com/prometheus/blackbox_exporter)
 
 ---
 
-## composer.sh
+## [composer.sh](composer.sh)
 
 Установка [composer](https://getcomposer.org/) первой и второй версии. По-умолчанию команда composer ссылается на вторую версию. Переключение осуществляется командами
 
@@ -48,23 +48,23 @@ sudo update-alternatives --set composer /usr/local/bin/composer2
 
 ---
 
-## dbeaver.sh
+## [dbeaver.sh](dbeaver.sh)
 
 Установка [DBeaver Community](https://dbeaver.io/download/)
 
 ---
 
-## docker.sh
+## [docker.sh](docker.sh)
 
 Установка [docker](https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository) и плагина compose (docker compose)
 
-## fake-webcam.sh
+## [fake-webcam.sh](fake-webcam.sh)
 
 Установка виртуальной камеры c добавлением виртуального фона [Linux-Fake-Background-Webcam](https://github.com/fangfufu/Linux-Fake-Background-Webcam)
 
 ---
 
-## node_exporter.sh
+## [node_exporter.sh](node_exporter.sh)
 
 Скрипт устанавливает или обновляет до последней версии [Node exporter](https://github.com/prometheus/node_exporter) со страницы https://github.com/prometheus/node_exporter/releases,
 создает базовую конфигурацию, настраивает и запускает службу
@@ -83,7 +83,7 @@ systemctl status node_exporter.service
 
 ---
 
-## php.sh
+## [php.sh](php.sh)
 
 Установка PHP версий 7.0-8.3 из репозитория https://launchpad.net/~ondrej/+archive/ubuntu/php
 
@@ -93,7 +93,7 @@ systemctl status node_exporter.service
 
 ---
 
-## prometheus.sh
+## [prometheus.sh](prometheus.sh)
 
 Скрипт устанавливает или обновляет до последней версии [Prometheus](https://prometheus.io/) со страницы https://github.com/prometheus/prometheus/releases,
 создает базовую конфигурацию, настраивает и запускает службу
@@ -112,15 +112,21 @@ systemctl status prometheus.service
 
 ---
 
-## rabbitmq.sh
+## [rabbitmq.sh](rabbitmq.sh)
 
 Установка RabbitMQ на Ubuntu на примере [скрипта автоматической установки](https://www.rabbitmq.com/docs/install-debian#apt-quick-start-cloudsmith)
 
 Дополнительно включаются плагины rabbitmq_management и rabbitmq_prometheus
 
+## [symfony.sh](symfony.sh)
+
+Установка [Symfony CLI](https://symfony.com/download)
+
+Дополнительно включаются плагины rabbitmq_management и rabbitmq_prometheus
+
 ---
 
-## victoriametrics.sh
+## [victoriametrics.sh](victoriametrics.sh)
 
 Скрипт устанавливает или обновляет до последней версии [VictoriaMetrics](https://victoriametrics.com/) со страницы https://github.com/VictoriaMetrics/VictoriaMetrics/releases,
 создает базовую конфигурацию, настраивает и запускает службу
@@ -139,13 +145,13 @@ systemctl status victoriametrics.service
 
 ---
 
-## victoriametrics-all.sh
+## [victoriametrics-all.sh](victoriametrics-all.sh)
 
 Установка компонентов мониторинга `victoriametrics.sh`, `vmagent.sh`, `vmalert.sh`, 
 
 ---
 
-## vmagent.sh
+## [vmagent.sh](vmagent.sh)
 
 Скрипт устанавливает или обновляет до последней версии [vmagent](https://docs.victoriametrics.com/vmagent.html) со страницы https://github.com/VictoriaMetrics/VictoriaMetrics/releases,
 создает базовую конфигурацию, настраивает и запускает службу
@@ -169,7 +175,7 @@ systemctl status vmagent.service
 
 ---
 
-## vmalert.sh
+## [vmalert.sh](vmalert.sh)
 
 Скрипт устанавливает или обновляет до последней версии [vmalert](https://docs.victoriametrics.com/vmalert.html) со страницы https://github.com/VictoriaMetrics/VictoriaMetrics/releases,
 создает базовую конфигурацию, настраивает и запускает службу
