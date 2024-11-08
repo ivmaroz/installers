@@ -29,7 +29,7 @@ esac
 sudo apt update
 sudo apt install software-properties-common
 
-if ! (find /etc/apt/ -name "*.list" -print0; find /etc/apt/ -name "*.sources" -print0) | xargs -0 cat | grep -q "ppa.launchpadcontent.net/ondrej/php/ubuntu"; then
+if ! (find /etc/apt/ -name "*.list" -print0; find /etc/apt/ -name "*.sources" -print0) | xargs -0 cat | grep -q "ondrej/php/ubuntu"; then
   sudo add-apt-repository ppa:ondrej/php
 fi
 
