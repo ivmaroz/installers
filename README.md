@@ -75,6 +75,12 @@ docker compose)
 
 ---
 
+## [grafana.sh](grafana.sh)
+
+Установка Grafana по инструкции https://grafana.com/docs/grafana/latest/setup-grafana/installation/debian/
+
+---
+
 ## [mtail.sh](mtail.sh)
 
 Установка [mtail](https://github.com/google/mtail)
