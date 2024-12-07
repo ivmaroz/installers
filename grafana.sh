@@ -24,7 +24,7 @@ sudo apt-get update
 # Installs the latest Enterprise release:
 sudo apt-get install grafana-enterprise
 
-systemctl enable --now grafana.service
+sudo systemctl enable --now grafana-server.service
 
 ########################################################################################################################
 
