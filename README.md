@@ -2,19 +2,24 @@
 
 Набор скриптов для установки и базовой настройки различных приложений в системе Ubuntu
 
-Для работы некоторых скриптов необходимы приложения `curl`, `wget`, `jq`, которые будут автоматически установлены при их отсутствии
+Для работы некоторых скриптов необходимы приложения `curl`, `wget`, `jq`, которые будут автоматически установлены при их
+отсутствии
 
 В скрипты можно передать переменные окружения:
 
 * `VERSION` - версия для установки. При отсутствии устанавливается последняя версия
-* `OS` - тип операционной системы (`linux`, `darwin` и т.д, соответствует ОС в ссылках на скачивание). При отсутствии определяется автоматически
-* `ARCH` - архитектура системы (`amd64`, `386`  и т.д, соответствует архитектуре в ссылках на скачивание). При отсутствии определяется автоматически
+* `OS` - тип операционной системы (`linux`, `darwin` и т.д, соответствует ОС в ссылках на скачивание). При отсутствии
+  определяется автоматически
+* `ARCH` - архитектура системы (`amd64`, `386`  и т.д, соответствует архитектуре в ссылках на скачивание). При
+  отсутствии определяется автоматически
 
 ---
 
 ## [alertmanager.sh](alertmanager.sh)
 
-Скрипт устанавливает или обновляет до последней версии [Alertmanager](https://prometheus.io/docs/alerting/latest/alertmanager/) со страницы https://github.com/prometheus/alertmanager/releases,
+Скрипт устанавливает или обновляет до последней
+версии [Alertmanager](https://prometheus.io/docs/alerting/latest/alertmanager/) со
+страницы https://github.com/prometheus/alertmanager/releases,
 создает базовую конфигурацию, настраивает и запускает службу
 
 Команда запуска
@@ -23,7 +28,8 @@
 [VERSION=<version>] [OS=<os>] [ARCH=<architecture>] ./alertmanager.sh
 ```
 
-Корректность установки можно проверить просмотром статуса сервиса `alertmanager.service` и открытием веб интерфейса по адресу http://127.0.0.1:9093
+Корректность установки можно проверить просмотром статуса сервиса `alertmanager.service` и открытием веб интерфейса по
+адресу http://127.0.0.1:9093
 
 ```shell
 systemctl status alertmanager.service
@@ -39,7 +45,8 @@ systemctl status alertmanager.service
 
 ## [composer.sh](composer.sh)
 
-Установка [composer](https://getcomposer.org/) первой и второй версии. По-умолчанию команда composer ссылается на вторую версию. Переключение осуществляется командами
+Установка [composer](https://getcomposer.org/) первой и второй версии. По-умолчанию команда composer ссылается на вторую
+версию. Переключение осуществляется командами
 
 ```bash
 sudo update-alternatives --set composer /usr/local/bin/composer1
@@ -56,13 +63,15 @@ sudo update-alternatives --set composer /usr/local/bin/composer2
 
 ## [docker.sh](docker.sh)
 
-Установка [docker](https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository) и плагина compose (docker compose)
+Установка [docker](https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository) и плагина compose (
+docker compose)
 
 ---
 
 ## [fake-webcam.sh](fake-webcam.sh)
 
-Установка виртуальной камеры c добавлением виртуального фона [Linux-Fake-Background-Webcam](https://github.com/fangfufu/Linux-Fake-Background-Webcam)
+Установка виртуальной камеры c добавлением виртуального
+фона [Linux-Fake-Background-Webcam](https://github.com/fangfufu/Linux-Fake-Background-Webcam)
 
 ---
 
@@ -74,7 +83,8 @@ sudo update-alternatives --set composer /usr/local/bin/composer2
 
 ## [node_exporter.sh](node_exporter.sh)
 
-Скрипт устанавливает или обновляет до последней версии [Node exporter](https://github.com/prometheus/node_exporter) со страницы https://github.com/prometheus/node_exporter/releases,
+Скрипт устанавливает или обновляет до последней версии [Node exporter](https://github.com/prometheus/node_exporter) со
+страницы https://github.com/prometheus/node_exporter/releases,
 создает базовую конфигурацию, настраивает и запускает службу
 
 Команда запуска
@@ -83,11 +93,19 @@ sudo update-alternatives --set composer /usr/local/bin/composer2
 [VERSION=<version>] [OS=<os>] [ARCH=<architecture>] ./node_exporter.sh
 ```
 
-Корректность установки можно проверить просмотром статуса сервиса `node_exporter.service` и открытием веб интерфейса по адресу http://127.0.0.1:9100
+Корректность установки можно проверить просмотром статуса сервиса `node_exporter.service` и открытием веб интерфейса по
+адресу http://127.0.0.1:9100
 
 ```shell
 systemctl status node_exporter.service
 ```
+
+---
+
+## [nordvpn.sh](nordvpn.sh)
+
+Официальный скрипт установки NordVPN c страницы https://nordvpn.com/ru/download/linux/, так как прямой доступ к скрипту из
+РБ доступ запрещен
 
 ---
 
@@ -103,7 +121,8 @@ systemctl status node_exporter.service
 
 ## [prometheus.sh](prometheus.sh)
 
-Скрипт устанавливает или обновляет до последней версии [Prometheus](https://prometheus.io/) со страницы https://github.com/prometheus/prometheus/releases,
+Скрипт устанавливает или обновляет до последней версии [Prometheus](https://prometheus.io/) со
+страницы https://github.com/prometheus/prometheus/releases,
 создает базовую конфигурацию, настраивает и запускает службу
 
 Команда запуска
@@ -112,7 +131,8 @@ systemctl status node_exporter.service
 [VERSION=<version>] [OS=<os>] [ARCH=<architecture>] ./prometheus.sh
 ```
 
-Корректность установки можно проверить просмотром статуса сервиса `prometheus.service` и открытием веб интерфейса по адресу http://127.0.0.1:9090
+Корректность установки можно проверить просмотром статуса сервиса `prometheus.service` и открытием веб интерфейса по
+адресу http://127.0.0.1:9090
 
 ```shell
 systemctl status prometheus.service
@@ -122,7 +142,8 @@ systemctl status prometheus.service
 
 ## [rabbitmq.sh](rabbitmq.sh)
 
-Установка RabbitMQ на Ubuntu на примере [скрипта автоматической установки](https://www.rabbitmq.com/docs/install-debian#apt-quick-start-cloudsmith)
+Установка RabbitMQ на Ubuntu на
+примере [скрипта автоматической установки](https://www.rabbitmq.com/docs/install-debian#apt-quick-start-cloudsmith)
 
 Дополнительно включаются плагины rabbitmq_management и rabbitmq_prometheus
 
@@ -136,7 +157,8 @@ systemctl status prometheus.service
 
 ## [victoriametrics.sh](victoriametrics.sh)
 
-Скрипт устанавливает или обновляет до последней версии [VictoriaMetrics](https://victoriametrics.com/) со страницы https://github.com/VictoriaMetrics/VictoriaMetrics/releases,
+Скрипт устанавливает или обновляет до последней версии [VictoriaMetrics](https://victoriametrics.com/) со
+страницы https://github.com/VictoriaMetrics/VictoriaMetrics/releases,
 создает базовую конфигурацию, настраивает и запускает службу
 
 Команда запуска
@@ -145,7 +167,8 @@ systemctl status prometheus.service
 [VERSION=<version>] [OS=<os>] [ARCH=<architecture>] ./victoriametrics.sh
 ```
 
-Корректность установки можно проверить просмотром статуса сервиса `victoriametrics.service` и открытием веб интерфейса по адресу http://127.0.0.1:8428
+Корректность установки можно проверить просмотром статуса сервиса `victoriametrics.service` и открытием веб интерфейса
+по адресу http://127.0.0.1:8428
 
 ```shell
 systemctl status victoriametrics.service
@@ -155,13 +178,14 @@ systemctl status victoriametrics.service
 
 ## [victoriametrics-all.sh](victoriametrics-all.sh)
 
-Установка компонентов мониторинга `victoriametrics.sh`, `vmagent.sh`, `vmalert.sh`, 
+Установка компонентов мониторинга `victoriametrics.sh`, `vmagent.sh`, `vmalert.sh`,
 
 ---
 
 ## [vmagent.sh](vmagent.sh)
 
-Скрипт устанавливает или обновляет до последней версии [vmagent](https://docs.victoriametrics.com/vmagent.html) со страницы https://github.com/VictoriaMetrics/VictoriaMetrics/releases,
+Скрипт устанавливает или обновляет до последней версии [vmagent](https://docs.victoriametrics.com/vmagent.html) со
+страницы https://github.com/VictoriaMetrics/VictoriaMetrics/releases,
 создает базовую конфигурацию, настраивает и запускает службу
 
 Команда запуска
@@ -171,11 +195,15 @@ systemctl status victoriametrics.service
 ```
 
 Где:
-* `VERSION` - версия для установки. При отсутствии устанавливается последняя версия
-* `OS` - тип операционной системы (`linux`, `darwin` и т.д, соответствует ОС в ссылках на скачивание). При отсутствии определяется автоматически
-* `ARCH` - архитектура системы (`amd64`, `386`  и т.д, соответствует архитектуре в ссылках на скачивание). При отсутствии определяется автоматически
 
-Корректность установки можно проверить просмотром статуса сервиса `vmagent.service` и открытием веб интерфейса по адресу http://127.0.0.1:8429
+* `VERSION` - версия для установки. При отсутствии устанавливается последняя версия
+* `OS` - тип операционной системы (`linux`, `darwin` и т.д, соответствует ОС в ссылках на скачивание). При отсутствии
+  определяется автоматически
+* `ARCH` - архитектура системы (`amd64`, `386`  и т.д, соответствует архитектуре в ссылках на скачивание). При
+  отсутствии определяется автоматически
+
+Корректность установки можно проверить просмотром статуса сервиса `vmagent.service` и открытием веб интерфейса по
+адресу http://127.0.0.1:8429
 
 ```shell
 systemctl status vmagent.service
@@ -185,7 +213,8 @@ systemctl status vmagent.service
 
 ## [vmalert.sh](vmalert.sh)
 
-Скрипт устанавливает или обновляет до последней версии [vmalert](https://docs.victoriametrics.com/vmalert.html) со страницы https://github.com/VictoriaMetrics/VictoriaMetrics/releases,
+Скрипт устанавливает или обновляет до последней версии [vmalert](https://docs.victoriametrics.com/vmalert.html) со
+страницы https://github.com/VictoriaMetrics/VictoriaMetrics/releases,
 создает базовую конфигурацию, настраивает и запускает службу
 
 Команда запуска
@@ -194,7 +223,8 @@ systemctl status vmagent.service
 [VERSION=<version>] [OS=<os>] [ARCH=<architecture>] ./vmalert.sh
 ```
 
-Корректность установки можно проверить просмотром статуса сервиса `vmalert.service` и открытием веб интерфейса по адресу http://127.0.0.1:8880
+Корректность установки можно проверить просмотром статуса сервиса `vmalert.service` и открытием веб интерфейса по
+адресу http://127.0.0.1:8880
 
 ```shell
 systemctl status vmalert.service
