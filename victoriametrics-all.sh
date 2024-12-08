@@ -13,13 +13,16 @@ echo ""
 
 ./victoriametrics.sh
 
+export TMP_DIR=/tmp/vmutils
+
 echo ""
 echo "#############################"
 echo "# Установка vmagent         #"
 echo "#############################"
 echo ""
 
-./vmagent.sh
+KEEP_SOURCE=1 \
+  ./vmagent.sh
 
 echo ""
 echo "#############################"
@@ -27,4 +30,7 @@ echo "# Установка vmalert         #"
 echo "#############################"
 echo ""
 
-./vmalert.sh
+KEEP_SOURCE=1 \
+  ./vmalert.sh
+
+[[ -d "${TMP_DIR}" ]] && sudo rm -rf "${TMP_DIR}"

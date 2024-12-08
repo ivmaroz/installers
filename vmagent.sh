@@ -43,7 +43,10 @@ fi
 ########################################################################################################################
 
 SERVICE_NAME="vmagent.service"
-TMP_DIR=/tmp/vmutils
+
+if [ -z "$TMP_DIR" ]; then
+  TMP_DIR=/tmp/vmutils
+fi
 APP_SOURCE_DIR="${TMP_DIR}"
 
 if [[ "$VERSION" != "$CURRENT_VERSION" ]]
@@ -54,6 +57,7 @@ then
 ########################################################################################################################
   VERSION="${VERSION}" \
   TMP_DIR="${TMP_DIR}" \
+  KEEP_SOURCE="$KEEP_SOURCE" \
     tools/vmutils.sh
 ########################################################################################################################
 
@@ -72,7 +76,9 @@ fi
 
 SERVICE_NAME="$SERVICE_NAME" SERVICE_STATUS="$SERVICE_STATUS" "tools/systemd.sh"
 
-[[ -d "${TMP_DIR}" ]] && sudo rm -rf "${TMP_DIR}"
+if [ -z "$KEEP_SOURCE" ]; then
+  [[ -d "${TMP_DIR}" ]] && sudo rm -rf "${TMP_DIR}"
+fi
 
 echo ""
 echo -e "${GREEN}Installation completed${NC}"
