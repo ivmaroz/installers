@@ -117,10 +117,18 @@ systemctl status node_exporter.service
 
 ## [php.sh](php.sh)
 
-Установка PHP версий 7.0-8.3 из репозитория https://launchpad.net/~ondrej/+archive/ubuntu/php
+Установка PHP версий 7.0-8.4 из репозитория https://launchpad.net/~ondrej/+archive/ubuntu/php
+
+Можно запускать с и без указания версии, в этом случае появится диалоговое окно выбора версии
 
 ```shell
 ./php.sh 8.2
+```
+
+или
+
+```shell
+./php.sh
 ```
 
 ---
