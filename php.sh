@@ -59,8 +59,6 @@ php${VERSION}-redis
 php${VERSION}-soap
 php${VERSION}-sqlite3
 php${VERSION}-ssh2
-php${VERSION}-xdebug
-php${VERSION}-xhprof
 php${VERSION}-xml
 php${VERSION}-yaml
 php${VERSION}-zip"
