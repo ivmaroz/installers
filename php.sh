@@ -41,7 +41,6 @@ OPTIONAL="php${VERSION}-fpm
 php${VERSION}-apcu
 php${VERSION}-bcmath
 php${VERSION}-cli
-php${VERSION}-common
 php${VERSION}-curl
 php${VERSION}-gd
 php${VERSION}-igbinary
@@ -78,7 +77,7 @@ done
 
 PACKAGES=$(eval "$COMMAND 3>&1 1>&2 2>&3")
 
-APT="sudo apt install -y"
+APT="sudo apt install "
 for PKG in $PACKAGES; do
   APT="$APT $PKG"
 done
