@@ -171,8 +171,6 @@ systemctl status prometheus.service
 
 Установка [Symfony CLI](https://symfony.com/download)
 
-Дополнительно включаются плагины rabbitmq_management и rabbitmq_prometheus
-
 ---
 
 ## [victoriametrics.sh](victoriametrics.sh)
