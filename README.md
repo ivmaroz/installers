@@ -81,6 +81,12 @@ docker compose)
 
 ---
 
+## [k9s.sh](k9s.sh)
+
+Установка [k9s](https://k9scli.io/)
+
+---
+
 ## [mtail.sh](mtail.sh)
 
 Установка [mtail](https://github.com/google/mtail)
