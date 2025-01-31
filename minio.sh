@@ -21,14 +21,20 @@ if [ ! -f /usr/local/bin/minio ]; then
   sudo mv /tmp/minio /usr/local/bin/minio
 fi
 
-sudo mkdir -p /opt/minio
-sudo chown minio:minio /opt/minio
-sudo chmod u=rwx,g=rwx,o=rx /opt/minio
+if [ -f /etc/default/minio ]; then
+  set -o allexport; source /etc/default/minio; set +o allexport
+fi
 
 MINIO_ROOT_USER=$(whiptail --title "Ввод параметров" --inputbox "Введите имя пользователя MINIO_ROOT_USER" 10 60 -- "${MINIO_ROOT_USER:-minioadmin}" 3>&1 1>&2 2>&3)
 MINIO_ROOT_PASSWORD=$(whiptail --title "Ввод параметров" --inputbox "Введите пароль MINIO_ROOT_PASSWORD" 10 60 -- "${MINIO_ROOT_PASSWORD:-minioadmin}" 3>&1 1>&2 2>&3)
 MINIO_VOLUMES=$(whiptail --title "Ввод параметров" --inputbox "Введите директорию с данными MINIO_VOLUMES" 10 60 -- "${MINIO_VOLUMES:-/opt/minio}" 3>&1 1>&2 2>&3)
 MINIO_OPTS=$(whiptail --title "Ввод параметров" --inputbox "Введите дополнительные параметры MINIO_OPTS" 10 60 -- "${MINIO_OPTS:---address :9000 --console-address :9001}" 3>&1 1>&2 2>&3)
+
+if [ ! -d "$MINIO_VOLUMES" ]; then
+  sudo mkdir -p "$MINIO_VOLUMES"
+  sudo chown minio:minio "$MINIO_VOLUMES"
+  sudo chmod u=rwx,g=rwx,o=rx "$MINIO_VOLUMES"
+fi
 
 sudo tee /tmp/minio <<EOF
 # MINIO_ROOT_USER and MINIO_ROOT_PASSWORD sets the root account for the MinIO server.
