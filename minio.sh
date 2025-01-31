@@ -21,24 +21,15 @@ if [ ! -f /usr/local/bin/minio ]; then
   sudo mv /tmp/minio /usr/local/bin/minio
 fi
 
-if [ -f /etc/default/minio ]; then
-  set -o allexport; source /etc/default/minio; set +o allexport
-fi
+if [ ! -f /etc/default/minio ]; then
+  MINIO_ROOT_USER=$(whiptail --title "Ввод параметров" --inputbox "Введите имя пользователя MINIO_ROOT_USER" 10 60 -- "${MINIO_ROOT_USER:-minioadmin}" 3>&1 1>&2 2>&3)
+  MINIO_ROOT_PASSWORD=$(whiptail --title "Ввод параметров" --inputbox "Введите пароль MINIO_ROOT_PASSWORD" 10 60 -- "${MINIO_ROOT_PASSWORD:-minioadmin}" 3>&1 1>&2 2>&3)
+  MINIO_VOLUMES=$(whiptail --title "Ввод параметров" --inputbox "Введите директорию с данными MINIO_VOLUMES" 10 60 -- "${MINIO_VOLUMES:-/opt/minio}" 3>&1 1>&2 2>&3)
+  MINIO_OPTS=$(whiptail --title "Ввод параметров" --inputbox "Введите дополнительные параметры MINIO_OPTS" 10 60 -- "${MINIO_OPTS:---address :9000 --console-address :9001}" 3>&1 1>&2 2>&3)
+  MINIO_OPTS=$(whiptail --title "Ввод параметров" --inputbox "Введите дополнительные параметры MINIO_OPTS" 10 60 -- "${MINIO_OPTS:---address :9000 --console-address :9001}" 3>&1 1>&2 2>&3)
+  MINIO_BROWSER_REDIRECT_URL=$(whiptail --title "Ввод параметров" --inputbox "Введите MINIO_BROWSER_REDIRECT_URL" 10 60 -- "${MINIO_BROWSER_REDIRECT_URL}" 3>&1 1>&2 2>&3)
 
-MINIO_ROOT_USER=$(whiptail --title "Ввод параметров" --inputbox "Введите имя пользователя MINIO_ROOT_USER" 10 60 -- "${MINIO_ROOT_USER:-minioadmin}" 3>&1 1>&2 2>&3)
-MINIO_ROOT_PASSWORD=$(whiptail --title "Ввод параметров" --inputbox "Введите пароль MINIO_ROOT_PASSWORD" 10 60 -- "${MINIO_ROOT_PASSWORD:-minioadmin}" 3>&1 1>&2 2>&3)
-MINIO_VOLUMES=$(whiptail --title "Ввод параметров" --inputbox "Введите директорию с данными MINIO_VOLUMES" 10 60 -- "${MINIO_VOLUMES:-/opt/minio}" 3>&1 1>&2 2>&3)
-MINIO_OPTS=$(whiptail --title "Ввод параметров" --inputbox "Введите дополнительные параметры MINIO_OPTS" 10 60 -- "${MINIO_OPTS:---address :9000 --console-address :9001}" 3>&1 1>&2 2>&3)
-MINIO_OPTS=$(whiptail --title "Ввод параметров" --inputbox "Введите дополнительные параметры MINIO_OPTS" 10 60 -- "${MINIO_OPTS:---address :9000 --console-address :9001}" 3>&1 1>&2 2>&3)
-MINIO_BROWSER_REDIRECT_URL=$(whiptail --title "Ввод параметров" --inputbox "Введите MINIO_BROWSER_REDIRECT_URL" 10 60 -- "${MINIO_BROWSER_REDIRECT_URL}" 3>&1 1>&2 2>&3)
-
-if [ ! -d "$MINIO_VOLUMES" ]; then
-  sudo mkdir -p "$MINIO_VOLUMES"
-  sudo chown minio:minio "$MINIO_VOLUMES"
-  sudo chmod u=rwx,g=rwx,o=rx "$MINIO_VOLUMES"
-fi
-
-sudo tee /tmp/minio <<EOF
+  sudo tee /etc/default/minio <<EOF
 # MINIO_ROOT_USER and MINIO_ROOT_PASSWORD sets the root account for the MinIO server.
 # This user has unrestricted permissions to perform S3 and administrative API operations on any resource in the deployment.
 # Omit to use the default values 'minioadmin:minioadmin'.
@@ -57,22 +48,16 @@ MINIO_OPTS="$MINIO_OPTS"
 
 MINIO_BROWSER_REDIRECT_URL="$MINIO_BROWSER_REDIRECT_URL"
 EOF
-
-if [ ! -f /etc/default/minio ]; then
-  sudo mv /tmp/minio /etc/default/minio
-elif ! diff -q /tmp/minio /etc/default/minio; then
-  sudo mv /tmp/minio /etc/default/minio
-  RESTART_SERVICE=1
 fi
 
-if [ -f /tmp/minio ]; then
-  sudo rm -f /tmp/minio
+if [ -f /etc/default/minio ]; then
+  set -o allexport; source /etc/default/minio; set +o allexport
+fi
+
+if [ ! -d "$MINIO_VOLUMES" ]; then
+  sudo mkdir -p "$MINIO_VOLUMES"
+  sudo chown minio:minio "$MINIO_VOLUMES"
+  sudo chmod u=rwx,g=rwx,o=rx "$MINIO_VOLUMES"
 fi
 
 SERVICE_NAME="minio.service" SERVICE_STATUS="$SERVICE_STATUS" "tools/systemd.sh"
-
-if [ -n "$RESTART_SERVICE" ]; then
-  sudo systemctl restart minio.service
-fi
-
-sudo systemctl status minio.service
