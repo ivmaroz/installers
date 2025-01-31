@@ -29,6 +29,8 @@ MINIO_ROOT_USER=$(whiptail --title "Ввод параметров" --inputbox "�
 MINIO_ROOT_PASSWORD=$(whiptail --title "Ввод параметров" --inputbox "Введите пароль MINIO_ROOT_PASSWORD" 10 60 -- "${MINIO_ROOT_PASSWORD:-minioadmin}" 3>&1 1>&2 2>&3)
 MINIO_VOLUMES=$(whiptail --title "Ввод параметров" --inputbox "Введите директорию с данными MINIO_VOLUMES" 10 60 -- "${MINIO_VOLUMES:-/opt/minio}" 3>&1 1>&2 2>&3)
 MINIO_OPTS=$(whiptail --title "Ввод параметров" --inputbox "Введите дополнительные параметры MINIO_OPTS" 10 60 -- "${MINIO_OPTS:---address :9000 --console-address :9001}" 3>&1 1>&2 2>&3)
+MINIO_OPTS=$(whiptail --title "Ввод параметров" --inputbox "Введите дополнительные параметры MINIO_OPTS" 10 60 -- "${MINIO_OPTS:---address :9000 --console-address :9001}" 3>&1 1>&2 2>&3)
+MINIO_BROWSER_REDIRECT_URL=$(whiptail --title "Ввод параметров" --inputbox "Введите MINIO_BROWSER_REDIRECT_URL" 10 60 -- "${MINIO_BROWSER_REDIRECT_URL}" 3>&1 1>&2 2>&3)
 
 if [ ! -d "$MINIO_VOLUMES" ]; then
   sudo mkdir -p "$MINIO_VOLUMES"
@@ -52,6 +54,8 @@ MINIO_VOLUMES="$MINIO_VOLUMES"
 # MINIO_OPTS sets any additional commandline options to pass to the MinIO server.
 # For example, \$(--console-address :9001) sets the MinIO Console listen port
 MINIO_OPTS="$MINIO_OPTS"
+
+MINIO_BROWSER_REDIRECT_URL="$MINIO_BROWSER_REDIRECT_URL"
 EOF
 
 if [ ! -f /etc/default/minio ]; then
