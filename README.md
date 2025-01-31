@@ -87,6 +87,12 @@ docker compose)
 
 ---
 
+# [minio.sh](minio.sh)
+
+Установка S3 совместимого сервера [MinIO](https://min.io/docs/minio/linux/index.html)
+
+---
+
 ## [mtail.sh](mtail.sh)
 
 Установка [mtail](https://github.com/google/mtail)
